@@ -1,0 +1,229 @@
+<!-- <div class="col-md-6 col-md-offset-3">
+  <h1>Hi {{currentUser.firstName}}!</h1>
+  <p>You're logged in with the MEAN Stack & Angular 6!!</p>
+  <h3>All registered users:</h3>
+  <ul>
+      <li *ngFor="let user of users">
+          {{user.username}} ({{user.firstName}} {{user.lastName}})
+          - <a (click)="deleteUser(user._id)">Delete</a>
+      </li>
+  </ul>
+  <p><a [routerLink]="['/login']">Logout</a></p>
+</div> -->
+
+
+<div class="row">
+  <div class="col m3 s12">
+      <ul>
+          <li style="margin: 17px;">
+              <i class="material-icons left">account_circle</i>
+              <h5>{{currentUser.firstName}} {{currentUser.lastName}}</h5></li>
+          <li><div class="divider"></div></li>
+          <li style="margin: 17px;cursor: pointer;">
+              <i class="material-icons left">today</i>
+              <h6>My Day</h6>
+          </li>
+          <li><div class="divider"></div></li>
+          <li  style="margin: 17px;cursor: pointer;">
+              <i class="material-icons left">category</i>
+              <h6 (click)="getToDo()">ToDo</h6>
+          </li>
+          <li ><div class="divider"></div></li>
+      
+          <li style="margin: 17px;cursor: pointer;">
+              <i class="material-icons left">done_outline</i>
+              <h6 (click)="getCompleted()">Completed Task</h6>
+          </li>
+          <li><div class="divider"></div></li>
+      
+          <li style="margin: 17px;cursor: pointer;">
+              <i class="material-icons left">power_settings_new</i>
+              <h6 [routerLink]="['/login']">Logout</h6>
+          </li>
+          <li><div class="divider"></div></li>
+          <br><br>
+          <li><div class="divider"></div></li>
+          <div *ngFor="let label of totalLabel">
+              <li style="margin: 17px; cursor: pointer;">
+                  <i class="material-icons left">menu</i>
+                  <h6 (click)="labelSort(label)">{{label}}</h6>
+              </li>
+              <li><div class="divider"></div></li>
+          </div>
+
+      </ul>
+  </div>
+  <div class="col m6">
+
+
+
+      <div class="row" *ngIf="labelCheck2">
+          <div class="col s12 m12">
+              <div class="card" style="margin: 0;">
+                  <div class="card-image">
+                      <img src="assets/day.jpg" style="height: 250px;">
+                      <span class="card-title">{{currentLabel}}
+
+                      </span>
+
+                      <span class="card-title" style="right: 0;">
+                          <a style="margin: 13px;" (click)="showNewFormData()"
+                              class="btn-floating btn-small waves-effect waves-light light-blue right"><i
+                                  class="material-icons right">add</i></a>
+                      </span>
+                  </div>
+                  <!-- <div class="card-content">
+        <p>I am a very simple card. I am good at containing small bits of information.
+        I am convenient because I require little markup to use effectively.</p>
+      </div> -->
+                  <div *ngFor='let todo of displayLabel'>
+                      <div class="card-action">
+                          <label>
+                              <input type="checkbox" value="1" #val (click)="changeStatus(todo,val.value)" />
+                              <span></span>
+                          </label>
+
+                          <span class="{{todo.linethrough}}" (click)="taskDetails(todo)">{{todo.task}} | {{todo.date | date: 'dd/MM/yyyy'}}</span>
+                          
+                          <span style="cursor: pointer;" (click)="deleteTask(todo._id)"><i
+                                  class="material-icons right">delete</i></span>
+
+                      </div>
+                  </div>
+
+
+              </div>
+          </div>
+      </div>
+
+
+
+
+
+  </div>
+  <div class="col m3">
+
+      <div class="row" style="padding: 10px;">
+          <div class="col m12" *ngIf="addTodo">
+              <form #formData='ngForm' class="col s12 m12">
+                  <input type="hidden" name="status" ngModel="new">
+                  <div class="row">
+                      <!-- <div class="input-field col s6 m12">
+            <i class="material-icons prefix">account_circle</i>
+            <input id="icon_prefix" type="text" class="validate">
+            <label for="icon_prefix">First Name</label>
+          </div> -->
+                      <div class="input-field col s6 m12">
+                          <i class="material-icons prefix">assessment</i>
+                          <input placeholder="task" type="text" class="validate" name="task" ngModel>
+                          <!-- <label for="icon_telephone">Task</label> -->
+                      </div>
+                      <!-- <div class="input-field col s6 m12">
+            <i class="material-icons prefix">phone</i>
+            <input id="icon_telephone" type="tel" class="validate">
+            <label for="icon_telephone">Telephone</label>
+          </div> -->
+                      <div class="input-field col s6 m12">
+                          <i class="material-icons prefix">schedule</i>
+                          <input placeholder="date" type="date" class="validate" name="date" ngModel>
+                          <label for="icon_telephone">Date</label>
+                      </div>
+                      <div class="col s4 m12">
+                          <i class="material-icons prefix">textsms</i>
+                              <mat-form-field class="example-chip-list">
+                                  
+                                  <mat-chip-list #chipList aria-label="Fruit selection">
+                                    <mat-chip *ngFor="let fruit of fruits" [selectable]="selectable"
+                                             [removable]="removable" (removed)="remove(fruit)">
+                                      {{fruit.name}}
+                                      <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                                    </mat-chip>
+                                    <input
+                                           [matChipInputFor]="chipList"
+                                           [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                                           [matChipInputAddOnBlur]="addOnBlur"
+                                           (matChipInputTokenEnd)="add($event)"
+                                           style="border: 0 !important;">
+                                  </mat-chip-list>
+                                </mat-form-field>
+                      </div>
+                      <div class="input-field col m12 s12">
+                          <button (click)="addTaskToService(formData.value)" class="btn waves-effect waves-light"
+                              style="width: 100%;">Create
+                              <i class="material-icons right">send</i>
+                          </button>
+                          <!--  -->
+                      </div>
+
+                  </div>
+              </form>
+
+             
+                
+          </div>
+
+          <div class="col m12" *ngIf="updateTodo">
+
+              
+              <form #formData='ngForm' class="col s12 m12">
+                  <input type="hidden" name="status" [(ngModel)]='taskObj.status'>
+               
+                  <div class="row">
+                      <!-- <div class="input-field col s6 m12">
+            <i class="material-icons prefix">account_circle</i>
+            <input id="icon_prefix" type="text" class="validate">
+            <label for="icon_prefix">First Name</label>
+          </div> -->
+                      <div class="input-field col s6 m12">
+                          <i class="material-icons prefix">assessment</i>
+                          <input placeholder="task" type="text" class="validate" name="task" [(ngModel)]='taskObj.task'>
+                          <!-- <label for="icon_telephone">Task</label> -->
+                      </div>
+                      <!-- <div class="input-field col s6 m12">
+            <i class="material-icons prefix">phone</i>
+            <input id="icon_telephone" type="tel" class="validate">
+            <label for="icon_telephone">Telephone</label>
+          </div> -->
+                      <div class="input-field col s6 m12">
+                          <i class="material-icons prefix">schedule</i>
+                          <input placeholder="date" type="date" class="validate" name="date" [(ngModel)]='taskObj.date'>
+                          <label for="icon_telephone">Date</label>
+                      </div>
+                      <div class="input-field col s4 m12">
+                          <i class="material-icons prefix">textsms</i>
+                          <mat-form-field class="example-chip-list">
+                                  
+                              <mat-chip-list #chipList aria-label="Fruit selection">
+                                <mat-chip *ngFor="let fruit of fruits" [selectable]="selectable"
+                                         [removable]="removable" (removed)="remove(fruit)">
+                                  {{fruit.name}}
+                                  <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                                </mat-chip>
+                                <input
+                                       [matChipInputFor]="chipList"
+                                       [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                                       [matChipInputAddOnBlur]="addOnBlur"
+                                       (matChipInputTokenEnd)="add($event)"
+                                       style="border: 0 !important;">
+                              </mat-chip-list>
+                            </mat-form-field>
+
+                          <label for=""></label>
+                          
+                          <!-- <input type="text" name="label" > -->
+                          <!-- <label>Label</label> -->
+                      </div>
+                      <div class="input-field col m12 s12">
+                          <button (click)="updateTask()" class="btn waves-effect waves-light"
+                              style="width: 100%;">Update
+                              <i class="material-icons right">send</i>
+                          </button>
+                          <!--  -->
+                      </div>
+
+                  </div>
+              </form>
+          </div>
+      </div>
+  </div>
+</div>
